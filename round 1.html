@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login</title>
+  <!-- Tailwind CSS CDN for modern utility styling -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Lucide Icons for clean UI icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="bg-slate-50 flex items-center justify-center min-h-screen p-4 font-sans">
+
+  <div class="w-full max-w-md bg-white rounded-2xl shadow-xl border border-slate-100 p-8 transition-all duration-300">
+    <!-- Header -->
+    <div class="text-center mb-8">
+      <h1 class="text-2xl font-bold text-slate-800 tracking-tight">Welcome Back</h1>
+      <p class="text-sm text-slate-500 mt-2">Please enter your details to sign in</p>
+    </div>
+
+    <!-- Success Message Banner -->
+    <div id="successBanner" class="hidden mb-6 p-4 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-lg text-sm flex items-center gap-2">
+      <i data-lucide="check-circle-2" class="w-5 h-5 text-emerald-600 shrink-0"></i>
+      <span>Successfully authenticated! Redirecting...</span>
+    </div>
+
+    <!-- Form -->
+    <form id="loginForm" class="space-y-5" novalidate>
+      <!-- Email Field -->
+      <div>
+        <label for="email" class="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-2">Email Address</label>
+        <div class="relative">
+          <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+            <i data-lucide="mail" class="w-5 h-5"></i>
+          </div>
+          <input 
+            type="email" 
+            id="email" 
+            name="email" 
+            placeholder="you@example.com" 
+            class="w-full pl-11 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 focus:bg-white transition-all text-sm"
+          >
+        </div>
+        <p id="emailError" class="hidden text-xs text-rose-500 mt-1.5"></p>
+      </div>
+
+      <!-- Password Field -->
+      <div>
+        <div class="flex justify-between items-center mb-2">
+          <label for="password" class="block text-xs font-semibold uppercase tracking-wider text-slate-600">Password</label>
+          <a href="#" class="text-xs font-medium text-indigo-600 hover:text-indigo-500 hover:underline">Forgot password?</a>
+        </div>
+        <div class="relative">
+          <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+            <i data-lucide="lock" class="w-5 h-5"></i>
+          </div>
+          <input 
+            type="password" 
+            id="password" 
+            name="password" 
+            placeholder="••••••••" 
+            class="w-full pl-11 pr-11 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 focus:bg-white transition-all text-sm"
+          >
+          <button 
+            type="button" 
+            id="togglePassword" 
+            class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-slate-600 focus:outline-none"
+            aria-label="Toggle password visibility"
+          >
+            <i data-lucide="eye" id="eyeIcon" class="w-5 h-5"></i>
+          </button>
+        </div>
+        <p id="passwordError" class="hidden text-xs text-rose-500 mt-1.5"></p>
+      </div>
+
+      <!-- Remember Me & Extra Options -->
+      <div class="flex items-center">
+        <input 
+          type="checkbox" 
+          id="rememberMe" 
+          name="rememberMe" 
+          class="h-4 w-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 cursor-pointer"
+        >
+        <label for="rememberMe" class="ml-2 text-sm text-slate-600 select-none cursor-pointer">Remember me</label>
+      </div>
+
+      <!-- Submit Button -->
+      <button 
+        type="submit" 
+        id="submitBtn" 
+        class="w-full flex items-center justify-center py-3 px-4 bg-indigo-600 text-white font-medium rounded-xl hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all duration-150 disabled:opacity-50 disabled:cursor-not-allowed text-sm"
+      >
+        <span id="btnText">Sign In</span>
+        <svg id="btnSpinner" class="hidden animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
+      </button>
+    </form>
+
+    <!-- Footer -->
+    <div class="text-center mt-6">
+      <p class="text-xs text-slate-500">Don't have an account? <a href="#" class="font-semibold text-indigo-600 hover:text-indigo-500 hover:underline">Sign up</a></p>
+    </div>
+  </div>
+
+  <script>
+    // Initialize Lucide icons
+    lucide.createIcons();
+
+    // DOM Elements
+    const form = document.getElementById('loginForm');
+    const emailInput = document.getElementById('email');
+    const passwordInput = document.getElementById('password');
+    const togglePasswordBtn = document.getElementById('togglePassword');
+    const eyeIcon = document.getElementById('eyeIcon');
+    const emailError = document.getElementById('emailError');
+    const passwordError = document.getElementById('passwordError');
+    const submitBtn = document.getElementById('submitBtn');
+    const btnText = document.getElementById('btnText');
+    const btnSpinner = document.getElementById('btnSpinner');
+    const successBanner = document.getElementById('successBanner');
+
+    // Email Pattern Validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    // Password Visibility Toggle
+    togglePasswordBtn.addEventListener('click', () => {
+      const isPassword = passwordInput.type === 'password';
+      passwordInput.type = isPassword ? 'text' : 'password';
+      
+      // Update Lucide Icon dynamically
+      eyeIcon.setAttribute('data-lucide', isPassword ? 'eye-off' : 'eye');
+      lucide.createIcons();
+    });
+
+    // Form Submission & Validation Handler
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      
+      let isValid = true;
+
+      // Validate Email
+      if (!emailInput.value.trim()) {
+        showError(emailInput, emailError, "Email address is required.");
+        isValid = false;
+      } else if (!emailRegex.test(emailInput.value.trim())) {
+        showError(emailInput, emailError, "Please enter a valid email address.");
+        isValid = false;
+      } else {
+        clearError(emailInput, emailError);
+      }
+
+      // Validate Password
+      if (!passwordInput.value.trim()) {
+        showError(passwordInput, passwordError, "Password is required.");
+        isValid = false;
+      } else if (passwordInput.value.length < 6) {
+        showError(passwordInput, passwordError, "Password must be at least 6 characters.");
+        isValid = false;
+      } else {
+        clearError(passwordInput, passwordError);
+      }
+
+      if (isValid) {
+        simulateLogin();
+      }
+    });
+
+    // Helper functions for validation states
+    function showError(inputEl, errorEl, message) {
+      errorEl.textContent = message;
+      errorEl.classList.remove('hidden');
+      inputEl.classList.add('border-rose-300', 'focus:ring-rose-500', 'focus:border-rose-500');
+      inputEl.classList.remove('border-slate-200', 'focus:ring-indigo-500', 'focus:border-indigo-500');
+    }
+
+    function clearError(inputEl, errorEl) {
+      errorEl.classList.add('hidden');
+      inputEl.classList.remove('border-rose-300', 'focus:ring-rose-500', 'focus:border-rose-500');
+      inputEl.classList.add('border-slate-200', 'focus:ring-indigo-500', 'focus:border-indigo-500');
+    }
+
+    // Simulate API request submission
+    function simulateLogin() {
+      // Set Loading State
+      submitBtn.disabled = true;
+      btnText.classList.add('hidden');
+      btnSpinner.classList.remove('hidden');
+      successBanner.classList.add('hidden');
+
+      setTimeout(() => {
+        // Reset Loading State
+        submitBtn.disabled = false;
+        btnText.classList.remove('hidden');
+        btnSpinner.classList.add('hidden');
+
+        // Show success banner
+        successBanner.classList.remove('hidden');
+        form.reset();
+      }, 1500);
+    }
+  </script>
+</body>
+</html>
